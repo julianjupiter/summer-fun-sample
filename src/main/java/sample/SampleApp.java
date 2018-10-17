@@ -4,34 +4,39 @@ import io.summer.fun.HttpMethod;
 import io.summer.fun.Route;
 import io.summer.fun.RouteCollection;
 import io.summer.fun.SummerFunApplication;
+import sample.domain.User;
+import sample.repository.UserRepository;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import java.util.List;
+import java.util.Optional;
 
 public class SampleApp {
 
     public static void main(String[] args) {
+        UserRepository userRepository = new UserRepository();
+        Jsonb jsonb = JsonbBuilder.create();
+
         SummerFunApplication app = new SummerFunApplication()
                 .withContextPath("/app")    // Default is /
                 .withPort(8083);            // Default is 8080
 
         // 1.
-        app.addRoute(HttpMethod.GET, "/users", (request, response) -> {
-            String users = "[{\"id\": 1, \"lastName\": \"Rizal\", \"firsName\": \"Jose\"}," +
-                "{\"id\": 2, \"lastName\": \"Bonifacio\", \"firsName\": \"Andres\"}," +
-                "{\"id\": 3, \"lastName\": \"Mabini\", \"firsName\": \"Apolinario\"}]";
-            response.json(users);
+        app.addRoute("GET", "/users", (request, response) -> {
+            List<User> users = userRepository.findAll();
+            String userJson = jsonb.toJson(users);
+
+            response.json(userJson);
         });
 
         // 2.
         app.addRoute(new Route(HttpMethod.GET, "/users/{id}", (request, response) -> {
             int id = Integer.parseInt(request.getPathParam("id"));
-            if (id == 1) {
-                String user = "{\"id\": 1, \"lastName\": \"Rizal\", \"firsName\": \"Jose\"}";
-                response.json(user);
-            } else if (id == 2) {
-                String user = "{\"id\": 2, \"lastName\": \"Bonifacio\", \"firsName\": \"Andres\"}";
-                response.json(user);
-            } else if (id == 3) {
-                String user = "{\"id\": 3, \"lastName\": \"Mabini\", \"firsName\": \"Apolinario\"}";
-                response.json(user);
+            Optional<User> userOptional = userRepository.findById(id);
+            User user = userOptional.orElse(null);
+            if (user != null) {
+                response.json(jsonb.toJson(user));
             } else {
                 response.setStatus(404);
                 String json = "{\"error\": {\"code\": 404, \"message\": \"Resource Not Found\"}}";
@@ -43,7 +48,10 @@ public class SampleApp {
         RouteCollection routes = new RouteCollection();
 
         Route home = new Route(HttpMethod.GET, "/home", (request, response) -> {
-            response.html("<h1>Welcome home!</h1>");
+            String content = "<!DOCTYPE html><html><head><title>Welcome home!</title></head><body>" +
+                    "<h1>Welcome home!</h1>" +
+                    "</body></html>";
+            response.html(content);
         });
 
         Route users = new Route(HttpMethod.GET, "/hello", (request, response) -> {
@@ -56,7 +64,10 @@ public class SampleApp {
 
         // 4.
         app.get("/contact", (request, response) -> {
-            response.html("<h2>Contact</h2>");
+            String content = "<!DOCTYPE html><html><head><title>Welcome home!</title></head><body>" +
+                    "<h1>Contact</h1>" +
+                    "</body></html>";
+            response.html(content);
         });
 
         app.run(() -> {
