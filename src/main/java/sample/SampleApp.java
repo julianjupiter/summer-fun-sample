@@ -1,9 +1,9 @@
 package sample;
 
-import io.summer.fun.HttpMethod;
-import io.summer.fun.Route;
-import io.summer.fun.RouteCollection;
-import io.summer.fun.SummerFunApplication;
+import summer.fun.HttpMethod;
+import summer.fun.Route;
+import summer.fun.RouteCollection;
+import summer.fun.SummerFunApplication;
 import sample.domain.User;
 import sample.repository.UserRepository;
 

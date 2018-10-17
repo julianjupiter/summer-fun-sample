@@ -18,7 +18,7 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>io.summer.fun</groupId>
+			<groupId>summer.fun</groupId>
 			<artifactId>summer-fun-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
