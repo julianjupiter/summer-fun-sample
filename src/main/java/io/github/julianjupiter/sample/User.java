@@ -1,4 +1,4 @@
-package sample.domain;
+package io.github.julianjupiter.sample;
 
 public class User {
     private int id;

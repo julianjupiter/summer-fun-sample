@@ -1,6 +1,4 @@
-package sample.repository;
-
-import sample.domain.User;
+package io.github.julianjupiter.sample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +15,13 @@ public class UserRepository {
         users.add(user1);
 
         User user2 = new User();
-        user2.setId(1);
+        user2.setId(2);
         user2.setLastName("Bonifacio");
         user2.setFirstName("Andres");
         users.add(user2);
 
         User user3 = new User();
-        user3.setId(1);
+        user3.setId(3);
         user3.setLastName("Mabini");
         user3.setFirstName("Apolinario");
         users.add(user3);

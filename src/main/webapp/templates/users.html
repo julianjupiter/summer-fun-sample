@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Summer Fun Application</title>
+        <link rel="stylesheet" href="/assets/bootstrap-grid.min.css">
+        <style>
+            .table {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                background-color: transparent;
+                border-collapse: collapse;
+                text-align: left;
+            }
+
+            .table thead th {
+                vertical-align: bottom;
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            .table thead tr th,
+            .table tbody tr th,
+            .table tbody tr td {
+                padding: .75rem;
+                vertical-align: top;
+                border-top: 1px solid #dee2e6
+            }
+
+            .table tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            .table-striped tbody tr:nth-of-type(2n+1) {
+                background-color: rgba(0,0,0,.05);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <h2>{{ title }}</h2>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <th>{{ user.id }}</th>
+                            <td>{{ user.firstName }} {{ user.lastName }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2">No users.</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
