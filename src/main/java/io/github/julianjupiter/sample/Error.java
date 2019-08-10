@@ -1,5 +1,9 @@
 package io.github.julianjupiter.sample;
 
+/**
+ * 
+ * @author julian
+ */
 public class Error {
     private int code;
     private String message;

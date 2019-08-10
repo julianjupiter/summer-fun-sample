@@ -1,6 +1,5 @@
 package io.github.julianjupiter.sample;
 
-import summer.fun.*;
 import summer.fun.http.HttpMethod;
 import summer.fun.http.HttpStatus;
 
@@ -8,17 +7,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
+import summer.fun.PebbleViewResolver;
+import summer.fun.Route;
+import summer.fun.SummerFun;
+import summer.fun.ViewResolver;
+import summer.fun.config.Configuration;
+import summer.fun.config.ConfigurationBuilder;
 
-public class SampleApp {
+/**
+ * 
+ * @author julian
+ */
+public class Application {
 
     public static void main(String[] args) {
-        UserRepository userRepository = new UserRepository();
+        Supplier<UserRepository> userRepositorySupplier = () -> new UserRepository();
 
         ViewResolver viewResolver = new PebbleViewResolver();
         viewResolver.setPrefix("templates");
         viewResolver.setSuffix(".html");
 
-        Configuration config = Configuration.builder()
+        Configuration config = ConfigurationBuilder.newBuilder()
                 .withContextPath("/app")
                 .withViewResolver(viewResolver)
                 .build();
@@ -26,16 +36,16 @@ public class SampleApp {
         SummerFun app = new SummerFun()
                 .withConfiguration(config);
 
-        // 1. http://localhost:8080/app/users
+        // 1. http://localhost:7000/app/users
         app.addRoute(HttpMethod.GET, "/users", (request, response) -> {
-            List<User> users = userRepository.findAll();
+            List<User> users = userRepositorySupplier.get().findAll();
             response.json().send(users);
         });
 
-        // 2. http://localhost:8080/app/users/{id}
+        // 2. http://localhost:7000/app/users/{id}
         app.addRoute(new Route(HttpMethod.GET, "/users/{id}", (request, response) -> {
             int id = Integer.parseInt(request.getPathParam("id"));
-            Optional<User> userOptional = userRepository.findById(id);
+            Optional<User> userOptional = userRepositorySupplier.get().findById(id);
             User user = userOptional.orElse(null);
             if (user != null) {
                 response.json().send(user);
@@ -46,9 +56,9 @@ public class SampleApp {
             }
         }));
 
-        // 3. http://localhost:8080/app/user-list
+        // 3. http://localhost:7000/app/user-list
         app.get("/user-list", (request, response) -> {
-            List<User> users = userRepository.findAll();
+            List<User> users = userRepositorySupplier.get().findAll();
             String title = "Users";
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("title", title);
